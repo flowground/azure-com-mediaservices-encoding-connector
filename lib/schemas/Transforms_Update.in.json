@@ -1,0 +1,166 @@
+{
+    "type": "object",
+    "properties": {
+        "subscriptionId": {
+            "required": true,
+            "type": "string"
+        },
+        "resourceGroupName": {
+            "required": true,
+            "type": "string"
+        },
+        "accountName": {
+            "required": true,
+            "type": "string"
+        },
+        "transformName": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "allOf": [
+                {
+                    "allOf": [
+                        {
+                            "description": "The core properties of ARM resources.",
+                            "properties": {
+                                "id": {
+                                    "description": "Fully qualified resource ID for the resource.",
+                                    "readOnly": true,
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "description": "The name of the resource.",
+                                    "readOnly": true,
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "description": "The type of the resource.",
+                                    "readOnly": true,
+                                    "type": "string"
+                                }
+                            },
+                            "x-ms-azure-resource": true,
+                            "type": "object"
+                        }
+                    ],
+                    "description": "The resource model definition for a ARM proxy resource."
+                }
+            ],
+            "description": "A Transform encapsulates the rules or instructions for generating desired outputs from input media, such as by transcoding or by extracting insights. After the Transform is created, it can be applied to input media by creating Jobs.",
+            "properties": {
+                "properties": {
+                    "description": "The resource properties.",
+                    "x-ms-client-flatten": true,
+                    "properties": {
+                        "created": {
+                            "description": "The UTC date and time when the Transform was created, in 'YYYY-MM-DDThh:mm:ssZ' format.",
+                            "format": "date-time",
+                            "readOnly": true,
+                            "type": "string",
+                            "nullable": false
+                        },
+                        "description": {
+                            "description": "An optional verbose description of the Transform.",
+                            "type": "string"
+                        },
+                        "lastModified": {
+                            "description": "The UTC date and time when the Transform was last updated, in 'YYYY-MM-DDThh:mm:ssZ' format.",
+                            "format": "date-time",
+                            "readOnly": true,
+                            "type": "string",
+                            "nullable": false
+                        },
+                        "outputs": {
+                            "description": "An array of one or more TransformOutputs that the Transform should generate.",
+                            "items": {
+                                "description": "Describes the properties of a TransformOutput, which are the rules to be applied while generating the desired output.",
+                                "properties": {
+                                    "onError": {
+                                        "description": "A Transform can define more than one outputs. This property defines what the service should do when one output fails - either continue to produce other outputs, or, stop the other outputs. The overall Job state will not reflect failures of outputs that are specified with 'ContinueJob'. The default is 'StopProcessingJob'.",
+                                        "enum": [
+                                            "StopProcessingJob",
+                                            "ContinueJob"
+                                        ],
+                                        "type": "string",
+                                        "x-ms-enum": {
+                                            "modelAsString": true,
+                                            "name": "OnErrorType",
+                                            "values": [
+                                                {
+                                                    "description": "Tells the service that if this TransformOutput fails, then any other incomplete TransformOutputs can be stopped.",
+                                                    "value": "StopProcessingJob"
+                                                },
+                                                {
+                                                    "description": "Tells the service that if this TransformOutput fails, then allow any other TransformOutput to continue.",
+                                                    "value": "ContinueJob"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "preset": {
+                                        "description": "Preset that describes the operations that will be used to modify, transcode, or extract insights from the source file to generate the output.",
+                                        "discriminator": {
+                                            "propertyName": "@odata.type"
+                                        },
+                                        "properties": {
+                                            "@odata.type": {
+                                                "description": "The discriminator for derived types.",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "@odata.type"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "relativePriority": {
+                                        "description": "Sets the relative priority of the TransformOutputs within a Transform. This sets the priority that the service uses for processing TransformOutputs. The default priority is Normal.",
+                                        "enum": [
+                                            "Low",
+                                            "Normal",
+                                            "High"
+                                        ],
+                                        "type": "string",
+                                        "x-ms-enum": {
+                                            "modelAsString": true,
+                                            "name": "Priority",
+                                            "values": [
+                                                {
+                                                    "description": "Used for TransformOutputs that can be generated after Normal and High priority TransformOutputs.",
+                                                    "value": "Low"
+                                                },
+                                                {
+                                                    "description": "Used for TransformOutputs that can be generated at Normal priority.",
+                                                    "value": "Normal"
+                                                },
+                                                {
+                                                    "description": "Used for TransformOutputs that should take precedence over others.",
+                                                    "value": "High"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "preset"
+                                ],
+                                "type": "object"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "outputs"
+                    ],
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "api_version": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}
